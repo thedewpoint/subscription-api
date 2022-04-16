@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Update 'VARIANT' to pick an LTS version of Node.js: 16, 14, 12.
+        # Append -bullseye or -buster to pin to an OS version.
+        # Use -bullseye variants on local arm64/Apple Silicon.
+        VARIANT: "16"
+    volumes:
+      - ..:/workspace:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+ 
+    # Uncomment the next line to use a non-root user for all processes.
+    # user: node
+
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  db:
+    image: mongo:latest
+    restart: unless-stopped
+    network_mode: service:app
+    volumes:
+      - mongodb-data:/data/db
+    # Uncomment to change startup options
+    # environment:
+    #  MONGO_INITDB_ROOT_USERNAME: root
+    #  MONGO_INITDB_ROOT_PASSWORD: example
+    #  MONGO_INITDB_DATABASE: your-database-here
+
+    # Add "forwardPorts": ["27017"] to **devcontainer.json** to forward MongoDB locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+  rabbitmq:
+    image: docker.io/bitnami/rabbitmq:3.9
+    network_mode: service:app
+    # ports:
+    #   - '4369:4369'
+    #   - '5551:5551'
+    #   - '5552:5552'
+    #   - '5672:5672'
+    #   - '25672:25672'
+    #   - '15672:15672'
+    environment:
+      - RABBITMQ_SECURE_PASSWORD=yes
+    volumes:
+      - 'rabbitmq_data:/bitnami/rabbitmq/mnesia'
+
+volumes:
+  mongodb-data: null
+  rabbitmq_data: null
