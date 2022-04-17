@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
-import { getMongoRepository, MongoRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Subscription } from './entities/subscription.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 @Injectable()
 export class SubscriptionsService {
-  // private repo: MongoRepository<Subscriptions>;
   constructor(
     @InjectRepository(Subscription)
     private subscriptionRepository: Repository<Subscription>,
