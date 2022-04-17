@@ -1,11 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
-
+import { getMongoRepository, MongoRepository, Repository } from 'typeorm';
+import { Subscription } from './entities/subscription.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 @Injectable()
 export class SubscriptionsService {
-  create(createSubscriptionDto: CreateSubscriptionDto) {
-    return 'This action adds a new subscription';
+  // private repo: MongoRepository<Subscriptions>;
+  constructor(
+    @InjectRepository(Subscription)
+    private subscriptionRepository: Repository<Subscription>,
+  ) {}
+  async create(createSubscriptionDto: CreateSubscriptionDto) {
+    try {
+      const response = await this.subscriptionRepository.save(
+        new Subscription(createSubscriptionDto),
+      );
+      console.log(JSON.stringify(response));
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   findAll() {
