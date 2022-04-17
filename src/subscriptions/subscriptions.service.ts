@@ -4,18 +4,22 @@ import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { Repository } from 'typeorm';
 import { Subscription } from './entities/subscription.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 @Injectable()
 export class SubscriptionsService {
   constructor(
     @InjectRepository(Subscription)
     private subscriptionRepository: Repository<Subscription>,
+    private readonly amqpConnection: AmqpConnection,
   ) {}
   async create(createSubscriptionDto: CreateSubscriptionDto) {
     try {
       const response = await this.subscriptionRepository.save(
         new Subscription(createSubscriptionDto),
       );
-      console.log(JSON.stringify(response));
+      this.amqpConnection.publish('subscription-exchange', '', {
+        subscriptionId: response.id,
+      });
     } catch (e) {
       console.error(e);
     }

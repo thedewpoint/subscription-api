@@ -39,8 +39,11 @@ services:
     # Add "forwardPorts": ["27017"] to **devcontainer.json** to forward MongoDB locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
   rabbitmq:
-    image: docker.io/bitnami/rabbitmq:3.9
+    image: heidiks/rabbitmq-delayed-message-exchange:3.9.13-management
     network_mode: service:app
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=bitnami
     # ports:
     #   - '4369:4369'
     #   - '5551:5551'

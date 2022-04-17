@@ -3,7 +3,7 @@ import { SubscriptionsService } from './subscriptions.service';
 import { SubscriptionsController } from './subscriptions.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Subscription } from './entities/subscription.entity';
-import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import { RabbitMQModule, RabbitMQConfig } from '@golevelup/nestjs-rabbitmq';
 @Module({
   controllers: [SubscriptionsController],
   providers: [SubscriptionsService],
@@ -13,7 +13,8 @@ import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
       exchanges: [
         {
           name: 'subscription-exchange',
-          type: 'topic',
+          type: 'x-delayed-message',
+          options: { arguments: { 'x-delayed-type': 'topic' } },
         },
       ],
       uri: 'amqp://user:bitnami@localhost:5672',

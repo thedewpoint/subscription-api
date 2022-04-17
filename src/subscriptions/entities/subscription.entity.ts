@@ -7,7 +7,6 @@ import { CreateSubscriptionDto } from '../dto/create-subscription.dto';
 export class Subscription {
   constructor(subscriptionDTO?: UpdateSubscriptionDto | CreateSubscriptionDto) {
     this.userId = subscriptionDTO?.userId;
-    this.planId = subscriptionDTO?.planId;
     this.active = subscriptionDTO?.active ?? true;
     this.createDate =
       subscriptionDTO?.createDate ?? DateTime.now().toUTC().toUnixInteger();
@@ -24,7 +23,7 @@ export class Subscription {
   userId: ObjectID;
 
   @ObjectIdColumn()
-  planId: ObjectID;
+  price: number;
 
   @Column()
   createDate: number;
