@@ -14,7 +14,7 @@ import { RabbitMQModule, RabbitMQConfig } from '@golevelup/nestjs-rabbitmq';
         {
           name: 'subscription-exchange',
           type: 'x-delayed-message',
-          options: { arguments: { 'x-delayed-type': 'topic' } },
+          options: { arguments: { 'x-delayed-type': 'direct' } },
         },
       ],
       uri: 'amqp://user:bitnami@localhost:5672',
